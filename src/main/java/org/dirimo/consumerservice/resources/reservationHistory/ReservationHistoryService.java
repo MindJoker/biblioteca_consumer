@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class ReservationHistoryService {
 
-    private final ReservationHistoryRepository repository;
+    private final ReservationHistoryRepository reservationHistoryRepository;
 
     public void save (ReservationHistory reservationHistory) {
-        repository.save(reservationHistory);
+        reservationHistoryRepository.save(reservationHistory);
     }
 }

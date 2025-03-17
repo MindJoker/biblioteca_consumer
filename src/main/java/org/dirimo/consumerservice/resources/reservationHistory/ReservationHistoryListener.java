@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ReservationHistoryListener {
 
-    private final ReservationHistoryRepository reservationHistoryRepository;
+    private final ReservationHistoryService reservationHistoryService;
     private final CustomerRepository customerRepository;
     private final BookRepository bookRepository;
     private final ObjectMapper objectMapper;
@@ -51,7 +51,9 @@ public class ReservationHistoryListener {
                                     payload.getBook().getDescription())
                     ));
 
-            reservationHistoryRepository.save(
+
+
+            reservationHistoryService.save(
                     new ReservationHistory(payload.getReservationId(), customer, book,
                             payload.getResStartDate(), payload.getResEndDate())
             );
