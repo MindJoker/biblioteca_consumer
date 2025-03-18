@@ -32,11 +32,4 @@ public class Customer{
     @OneToMany(mappedBy = "customer")
     @JsonIgnore
     private List<ReservationHistory> reservation;
-
-    public Customer(Long customerId, String firstName, String lastName, String email) {
-        this.id = customerId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-    }
 }

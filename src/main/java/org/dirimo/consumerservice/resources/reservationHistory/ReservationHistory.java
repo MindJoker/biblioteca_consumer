@@ -35,11 +35,4 @@ public class ReservationHistory {
 
     @Column(name = "DATA_END")
     private LocalDate resEndDate;
-
-//    public ReservationHistory(Customer customer, Book book, LocalDate resStartDate, LocalDate resEndDate) {
-//        this.customer = customer;
-//        this.book = book;
-//        this.resStartDate = resStartDate;
-//        this.resEndDate = resEndDate;
-//    }
 }

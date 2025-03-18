@@ -45,16 +45,4 @@ public class Book {
     @OneToMany(mappedBy = "book")
     @JsonIgnore
     private List<ReservationHistory> reservation;
-
-    public Book(Long bookId, String isbn, String title, String author, Integer year, String genre, String publisher, String language, String description) {
-        this.id = bookId;
-        this.isbn = isbn;
-        this.title = title;
-        this.author = author;
-        this.year = year;
-        this.genre = genre;
-        this.publisher = publisher;
-        this.language = language;
-        this.description = description;
-    }
 }

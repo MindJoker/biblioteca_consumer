@@ -5,10 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dirimo.consumerservice.resources.book.Book;
-import org.dirimo.consumerservice.resources.book.BookRepository;
-import org.dirimo.consumerservice.resources.customer.Customer;
-import org.dirimo.consumerservice.resources.customer.CustomerRepository;
+import org.dirimo.commonlibrary.dto.ReservationDTO;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
@@ -18,45 +15,20 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ReservationHistoryListener {
 
-    private final ReservationHistoryService reservationHistoryService;
-    private final CustomerRepository customerRepository;
-    private final BookRepository bookRepository;
     private final ObjectMapper objectMapper;
+    private final ReservationHistoryService reservationHistoryService;
 
     @JmsListener(destination = "reservation_history")
-    public void receive (String message) {
+    public void receive(String message) {
         try {
             log.info("Ricevuto messaggio JMS: {}", message);
             objectMapper.registerModule(new JavaTimeModule());
-            ReservationHistoryPayload payload = objectMapper.readValue(message, ReservationHistoryPayload.class);
 
-            Customer customer = customerRepository.findById(payload.getCustomer().getCustomerId())
-                    .orElseGet(() -> customerRepository.save(
-                            new Customer(payload.getCustomer().getCustomerId(),
-                                    payload.getCustomer().getFirstName(),
-                                    payload.getCustomer().getLastName(),
-                                    payload.getCustomer().getEmail())
-                    ));
+            //creare dto distinti
 
-            Book book = bookRepository.findById(payload.getBook().getBookId())
-                    .orElseGet(() -> bookRepository.save(
-                            new Book(payload.getBook().getBookId(),
-                                    payload.getBook().getIsbn(),
-                                    payload.getBook().getTitle(),
-                                    payload.getBook().getAuthor(),
-                                    payload.getBook().getYear(),
-                                    payload.getBook().getGenre(),
-                                    payload.getBook().getPublisher(),
-                                    payload.getBook().getLanguage(),
-                                    payload.getBook().getDescription())
-                    ));
+            ReservationDTO reservationDTO = objectMapper.readValue(message, ReservationDTO.class);
 
-
-
-            reservationHistoryService.save(
-                    new ReservationHistory(payload.getReservationId(), customer, book,
-                            payload.getResStartDate(), payload.getResEndDate())
-            );
+            reservationHistoryService.setData(reservationDTO);
 
         } catch (Exception e) {
             e.printStackTrace();
