@@ -1,5 +1,8 @@
 package org.dirimo.consumerservice.resources.reservationHistory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.dirimo.commonlibrary.dto.BookDTO;
@@ -21,6 +24,7 @@ public class ReservationHistoryService {
     private final ReservationHistoryRepository reservationHistoryRepository;
     private final BookRepository bookRepository;
     private final CustomerRepository customerRepository;
+    private final ObjectMapper objectMapper;
 
     public ReservationHistory create(ReservationHistory reservationHistory) {
         return reservationHistoryRepository.save(reservationHistory);
@@ -66,4 +70,9 @@ public class ReservationHistoryService {
         );
     }
 
+    public void convertData(String payload) throws JsonProcessingException {
+        objectMapper.registerModule(new JavaTimeModule());
+        ReservationDTO reservationDTO = objectMapper.readValue(payload, ReservationDTO.class);
+        setData(reservationDTO);
+    }
 }
